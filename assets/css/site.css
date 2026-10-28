@@ -1,5 +1,5 @@
 /* ============================================================
-   दविंदर पाल सिंह — Life Architect Coach
+   Davinder Pal Singh — Life Architect Coach
    Concept: the page is one continuous sky. Scrolling down is
    climbing. Dawn horizon at the top, high azure at the bottom.
    ============================================================ */
@@ -26,12 +26,12 @@
   --rail-col:92px;
   --railx:28px;
 
-  --measure:62ch;
+  --measure:66ch;
   --gutter:clamp(1.25rem,5vw,2.5rem);
   --bandpad:clamp(3.5rem,7vw,6rem);
 
-  --sans:"Noto Sans Devanagari",system-ui,sans-serif;
-  --serif:"Tiro Devanagari Hindi","Noto Serif Devanagari",Georgia,serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --serif:Newsreader,Georgia,"Times New Roman",serif;
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -48,7 +48,7 @@ body{
   font-family:var(--sans);
   font-size:1.0625rem;
   font-weight:400;
-  line-height:1.8;            /* Devanagari needs room for matras */
+  line-height:1.65;
   color:var(--ink);
   background:var(--zenith);
   -webkit-font-smoothing:antialiased;
@@ -188,7 +188,7 @@ a{color:inherit}
 .band--high    {background:linear-gradient(180deg,#0A2449 0%,#08203F 100%);color:var(--light)}
 .band--highest {background:linear-gradient(180deg,#08203F 0%,var(--strato) 100%);color:var(--light)}
 
-/* ── आज हो क्या रहा है ──────────────────────────────────── */
+/* ── the problem ─────────────────────────────────────────── */
 .observations{max-width:60ch;margin-bottom:2.8rem}
 .observations p{
   position:relative;padding-left:1.4rem;margin-bottom:1.35em;
@@ -290,7 +290,7 @@ a{color:inherit}
   .step__hi{display:block;font-size:.95rem;margin-top:.15rem}
 }
 
-/* ── प्रारूप ─────────────────────────────────────────────── */
+/* ── how it runs ─────────────────────────────────────────── */
 .facts{display:grid;gap:0;margin:0;max-width:760px}
 .fact{
   display:grid;grid-template-columns:150px 1fr;gap:1.5rem;
@@ -305,13 +305,19 @@ a{color:inherit}
   .fact{grid-template-columns:1fr;gap:.4rem}
 }
 
-/* ── परिचय ───────────────────────────────────────────────── */
+/* ── about ───────────────────────────────────────────────── */
 .about{display:grid;grid-template-columns:300px 1fr;gap:clamp(2rem,5vw,4rem);align-items:start}
-.about__portrait img{width:100%;height:auto;display:block;border-radius:3px}
-.about__slot{
-  aspect-ratio:4/5;display:grid;place-items:center;
-  border:1px dashed rgba(255,255,255,.3);border-radius:3px;
-  color:rgba(255,255,255,.35);font-size:.85rem;
+.about__portrait{margin:0;position:relative}
+.about__portrait img{
+  width:100%;height:auto;display:block;border-radius:3px;
+  aspect-ratio:4/5;object-fit:cover;object-position:50% 28%;
+  box-shadow:0 18px 50px -24px rgba(3,14,30,.85);
+}
+/* a hairline of sky along the top edge, so the portrait sits in the
+   same light as the rest of the page rather than being pasted on */
+.about__portrait::after{
+  content:"";position:absolute;inset:0;border-radius:3px;pointer-events:none;
+  box-shadow:inset 0 1px 0 rgba(234,243,251,.28);
 }
 .about__text p{color:#C3D7EA;max-width:56ch}
 .about__sign{font-family:var(--serif);color:var(--light) !important}
@@ -319,14 +325,14 @@ a{color:inherit}
   .about{grid-template-columns:1fr;max-width:460px}
 }
 
-/* ── दृष्टि ───────────────────────────────────────────────── */
+/* ── vision ──────────────────────────────────────────────── */
 .vision p{
   font-family:var(--serif);
   font-size:clamp(1.2rem,1rem + .9vw,1.6rem);
   line-height:1.55;color:#D6E6F4;max-width:34ch;
 }
 
-/* ── संपर्क ──────────────────────────────────────────────── */
+/* ── contact ─────────────────────────────────────────────── */
 .contact{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.5rem,6vw,5rem);align-items:start}
 .contact__intro p{color:#C3D7EA;max-width:38ch}
 @media (max-width:860px){.contact{grid-template-columns:1fr}}
