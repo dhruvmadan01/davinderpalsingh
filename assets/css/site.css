@@ -1,0 +1,356 @@
+/* ============================================================
+   दविंदर पाल सिंह — Life Architect Coach
+   Concept: the page is one continuous sky. Scrolling down is
+   climbing. Dawn horizon at the top, high azure at the bottom.
+   ============================================================ */
+
+:root{
+  /* sky, ground to stratosphere */
+  --zenith:#BBD9F0;
+  --morning:#DCEAF6;
+  --dawn:#F6E0C6;
+  --haze:#EAF1F8;
+  --mid:#6BA6D8;
+  --azure:#15437C;
+  --deep:#0C2B52;
+  --strato:#071C38;
+
+  --sun:#E9A23B;
+  --ink:#0E2440;
+  --ink-soft:#44607F;
+  --ink-mid:#23405F;   /* secondary text on mid-sky */
+  --ink-meta:#14406F;  /* duration / meta on mid-sky */
+  --light:#EAF3FB;
+  --light-soft:#A8C4DF;
+
+  --rail-col:92px;
+  --railx:28px;
+
+  --measure:62ch;
+  --gutter:clamp(1.25rem,5vw,2.5rem);
+  --bandpad:clamp(3.5rem,7vw,6rem);
+
+  --sans:"Noto Sans Devanagari",system-ui,sans-serif;
+  --serif:"Tiro Devanagari Hindi","Noto Serif Devanagari",Georgia,serif;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+[id]{scroll-margin-top:84px}
+
+/* html paints the overscroll gutter (matches the footer); body paints the
+   strip behind the sticky bar (matches the top of the hero sky). */
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;background:var(--strato)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+body{
+  margin:0;
+  font-family:var(--sans);
+  font-size:1.0625rem;
+  font-weight:400;
+  line-height:1.8;            /* Devanagari needs room for matras */
+  color:var(--ink);
+  background:var(--zenith);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+p{margin:0 0 1.1em;max-width:var(--measure)}
+a{color:inherit}
+
+.wrap{width:min(1120px,100% - var(--gutter)*2);margin-inline:auto}
+
+.skip{
+  position:absolute;left:-9999px;top:0;z-index:99;
+  background:var(--sun);color:#2A1A00;padding:.7rem 1.1rem;font-weight:600;
+}
+.skip:focus{left:.5rem;top:.5rem}
+
+:focus-visible{outline:2px solid var(--sun);outline-offset:3px;border-radius:2px}
+
+/* ── display type ───────────────────────────────────────── */
+.h2{
+  font-family:var(--serif);
+  font-weight:400;
+  font-size:clamp(1.9rem,1.35rem + 2.3vw,3rem);
+  line-height:1.35;
+  letter-spacing:.005em;
+  margin:0 0 1.6rem;
+  max-width:18ch;
+}
+.h2--light{color:var(--light)}
+
+/* ── top bar ────────────────────────────────────────────── */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.65rem var(--gutter);
+  background:transparent;
+  border-bottom:1px solid transparent;
+  transition:background .3s ease,border-color .3s ease,color .3s ease;
+}
+.topbar__name{
+  font-family:var(--serif);font-size:1.0625rem;text-decoration:none;white-space:nowrap;
+}
+.topbar__nav{display:flex;align-items:center;gap:clamp(.7rem,2vw,1.6rem)}
+.topbar__nav a{
+  text-decoration:none;font-size:.9rem;font-weight:500;color:var(--ink-soft);
+  padding:.25rem 0;border-bottom:1.5px solid transparent;
+}
+.topbar__nav a:hover{color:var(--ink);border-bottom-color:var(--sun)}
+.topbar__cta{
+  background:var(--ink);color:var(--light) !important;
+  padding:.45rem 1rem !important;border-radius:999px;border-bottom:0 !important;
+}
+.topbar__cta:hover{background:var(--sun);color:#2A1A00 !important}
+
+.topbar.is-stuck{
+  background:rgba(226,238,250,.82);
+  backdrop-filter:blur(10px);
+  border-bottom-color:rgba(14,36,64,.1);
+}
+
+/* dark half of the page */
+.topbar.is-high{
+  background:rgba(10,32,62,.82);
+  border-bottom-color:rgba(255,255,255,.12);
+  color:var(--light);
+}
+.topbar.is-high .topbar__nav a{color:var(--light-soft)}
+.topbar.is-high .topbar__nav a:hover{color:#fff}
+.topbar.is-high .topbar__cta{background:var(--sun);color:#2A1A00 !important}
+
+@media (max-width:760px){
+  .topbar__nav a:not(.topbar__cta){display:none}
+}
+
+/* ── hero · standing on the ground at dawn ──────────────── */
+.hero{
+  position:relative;
+  background:linear-gradient(180deg,var(--zenith) 0%,var(--morning) 52%,var(--dawn) 100%);
+  padding:clamp(4rem,13vh,8rem) 0 clamp(5rem,14vh,9rem);
+}
+/* hero shares the page's left edge rather than sitting in a narrower
+   centred box, so hero / climb / bands all start on the same line */
+.hero__role{
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(1rem,.9rem + .4vw,1.2rem);
+  color:var(--ink-soft);margin:0 0 1.2rem;
+}
+.hero__title{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(2.1rem,1.25rem + 3.5vw,3.6rem);
+  line-height:1.26;letter-spacing:-.005em;
+  margin:0 0 1.5rem;max-width:860px;text-wrap:balance;
+}
+.hero__title em{font-style:italic}
+.hero__lede{
+  font-size:clamp(1.05rem,.98rem + .45vw,1.3rem);
+  color:var(--ink-soft);max-width:46ch;margin-bottom:2.3rem;
+}
+.hero__actions{display:flex;flex-wrap:wrap;gap:.8rem}
+
+.horizon{
+  position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(233,162,59,.85) 22%,rgba(233,162,59,.85) 78%,transparent);
+}
+
+@media (prefers-reduced-motion:no-preference){
+  .hero__role,.hero__title,.hero__lede,.hero__actions{
+    animation:rise .9s cubic-bezier(.22,.7,.3,1) backwards;
+  }
+  .hero__title{animation-delay:.08s}
+  .hero__lede{animation-delay:.16s}
+  .hero__actions{animation-delay:.24s}
+  .horizon{animation:widen 1.4s cubic-bezier(.22,.7,.3,1) backwards;animation-delay:.1s}
+}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes widen{from{opacity:0;transform:scaleX(.3)}to{opacity:1;transform:none}}
+
+/* ── buttons ────────────────────────────────────────────── */
+.btn{
+  display:inline-block;text-decoration:none;font-family:var(--sans);
+  font-size:1rem;font-weight:600;line-height:1.2;
+  padding:.95rem 1.7rem;border-radius:999px;border:1.5px solid transparent;
+  cursor:pointer;transition:transform .18s ease,background .18s ease,color .18s ease;
+}
+.btn--sun{background:var(--sun);color:#2A1A00;border-color:var(--sun)}
+.btn--sun:hover{transform:translateY(-2px)}
+.btn--line{border-color:currentColor;color:var(--ink)}
+.btn--line:hover{background:var(--ink);color:var(--light);border-color:var(--ink)}
+.btn--full{width:100%;font-size:1.05rem}
+
+/* ── generic bands ──────────────────────────────────────── */
+.band{padding:var(--bandpad) 0}
+.band--dawn    {background:linear-gradient(180deg,var(--dawn) 0%,#F1EDE6 38%,var(--haze) 100%)}
+.band--deep    {background:linear-gradient(180deg,var(--azure) 0%,#0F3263 100%);color:var(--light);padding-top:calc(var(--bandpad) * .7)}
+.band--deeper  {background:linear-gradient(180deg,#0F3263 0%,#0A2449 100%);color:var(--light)}
+.band--high    {background:linear-gradient(180deg,#0A2449 0%,#08203F 100%);color:var(--light)}
+.band--highest {background:linear-gradient(180deg,#08203F 0%,var(--strato) 100%);color:var(--light)}
+
+/* ── आज हो क्या रहा है ──────────────────────────────────── */
+.observations{max-width:60ch;margin-bottom:2.8rem}
+.observations p{
+  position:relative;padding-left:1.4rem;margin-bottom:1.35em;
+  font-size:1.0625rem;color:#24405E;
+}
+.observations p::before{
+  content:"";position:absolute;left:0;top:.85em;
+  width:7px;height:1.5px;background:var(--sun);
+}
+.pullout{
+  font-family:var(--serif);
+  font-size:clamp(1.3rem,1.05rem + 1.1vw,1.9rem);
+  line-height:1.45;max-width:24ch;margin:0;
+  padding-top:1.8rem;border-top:1px solid rgba(14,36,64,.18);
+}
+
+/* ══════════════════════════════════════════════════════════
+   THE CLIMB — altimeter + ten levels
+   ══════════════════════════════════════════════════════════ */
+.climb{
+  padding:var(--bandpad) 0 16rem;
+  background:linear-gradient(180deg,
+    var(--haze) 0%,#D3E4F4 20%,#A8CBE8 50%,
+    #7FB4DE calc(100% - 230px),var(--azure) 100%);
+}
+/* climb shares the page's left edge: .ladder stays a full wrap (so the rail
+   lines up with the marks) and the rows inside are what get capped. */
+.climb__head,.step,.stage{max-width:820px}
+.climb__head{margin-bottom:clamp(3rem,7vw,5rem)}
+.climb__sub{font-size:1.0625rem;color:var(--ink-mid);max-width:44ch}
+
+.ladder{position:relative}
+
+.ladder__rail{
+  position:absolute;left:var(--railx);top:.5rem;bottom:3rem;width:2px;
+  background:linear-gradient(180deg,rgba(14,36,64,.16),rgba(14,36,64,.22) 40%,rgba(255,255,255,.3));
+}
+.ladder__fill{
+  position:absolute;left:0;top:0;width:100%;height:0;
+  background:linear-gradient(180deg,var(--sun),#F2C37A);
+}
+@media (prefers-reduced-motion:no-preference){
+  .ladder__fill{transition:height .25s linear}
+}
+
+/* stage headings sit in the content column */
+.stage{
+  margin:clamp(3rem,6vw,4.5rem) 0 1.8rem var(--rail-col);
+  display:flex;align-items:baseline;gap:.9rem;
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(1.15rem,1rem + .6vw,1.45rem);
+  line-height:1.3;color:var(--ink);
+}
+.stage:first-of-type{margin-top:0}
+.stage small{
+  font-family:var(--sans);font-size:.82rem;font-weight:500;
+  color:var(--ink-mid);letter-spacing:.01em;
+}
+
+/* one level */
+.step{
+  display:grid;grid-template-columns:var(--rail-col) 1fr;
+  align-items:start;
+  padding:1.6rem 0 2.2rem;
+}
+.step__mark{
+  width:56px;height:56px;flex:none;
+  display:grid;place-items:center;
+  border-radius:50%;
+  background:var(--haze);
+  border:2px solid rgba(14,36,64,.22);
+  transition:border-color .3s ease,background .3s ease,transform .3s ease;
+}
+.step__num{
+  font-family:var(--serif);font-size:1.5rem;line-height:1;color:var(--ink);
+  transition:color .3s ease;
+}
+.step.is-active .step__mark{border-color:var(--sun);transform:scale(1.06)}
+
+.step__title{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(1.3rem,1.1rem + .9vw,1.75rem);
+  line-height:1.3;margin:0 0 .35rem;color:var(--ink);
+}
+.step__hi{font-size:.72em;color:var(--ink-mid)}
+.step__meta{
+  font-size:.86rem;font-weight:600;color:var(--ink-meta);
+  margin:0 0 .7rem;letter-spacing:.01em;
+}
+.step__body p:last-child{margin-bottom:0;max-width:56ch}
+
+@media (max-width:760px){
+  :root{--rail-col:58px;--railx:18px}
+  .step__mark{width:36px;height:36px;border-width:1.5px}
+  .step__num{font-size:1.05rem}
+  .step{padding:1.1rem 0 1.8rem}
+  .stage{margin-left:var(--rail-col);gap:.6rem}
+  .stage small{font-size:.75rem}
+  .step__hi{display:block;font-size:.95rem;margin-top:.15rem}
+}
+
+/* ── प्रारूप ─────────────────────────────────────────────── */
+.facts{display:grid;gap:0;margin:0;max-width:760px}
+.fact{
+  display:grid;grid-template-columns:150px 1fr;gap:1.5rem;
+  padding:1.5rem 0;border-top:1px solid rgba(255,255,255,.15);
+}
+.fact:last-child{border-bottom:1px solid rgba(255,255,255,.15)}
+.fact dt{
+  font-family:var(--serif);font-size:1.15rem;color:var(--light);
+}
+.fact dd{margin:0;color:#C3D7EA;max-width:52ch}
+@media (max-width:640px){
+  .fact{grid-template-columns:1fr;gap:.4rem}
+}
+
+/* ── परिचय ───────────────────────────────────────────────── */
+.about{display:grid;grid-template-columns:300px 1fr;gap:clamp(2rem,5vw,4rem);align-items:start}
+.about__portrait img{width:100%;height:auto;display:block;border-radius:3px}
+.about__slot{
+  aspect-ratio:4/5;display:grid;place-items:center;
+  border:1px dashed rgba(255,255,255,.3);border-radius:3px;
+  color:rgba(255,255,255,.35);font-size:.85rem;
+}
+.about__text p{color:#C3D7EA;max-width:56ch}
+.about__sign{font-family:var(--serif);color:var(--light) !important}
+@media (max-width:820px){
+  .about{grid-template-columns:1fr;max-width:460px}
+}
+
+/* ── दृष्टि ───────────────────────────────────────────────── */
+.vision p{
+  font-family:var(--serif);
+  font-size:clamp(1.2rem,1rem + .9vw,1.6rem);
+  line-height:1.55;color:#D6E6F4;max-width:34ch;
+}
+
+/* ── संपर्क ──────────────────────────────────────────────── */
+.contact{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.5rem,6vw,5rem);align-items:start}
+.contact__intro p{color:#C3D7EA;max-width:38ch}
+@media (max-width:860px){.contact{grid-template-columns:1fr}}
+
+.form{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+.field{display:flex;flex-direction:column;gap:.45rem}
+.field--wide{grid-column:1/-1}
+.field label{font-size:.9rem;font-weight:600;color:var(--light)}
+.field input,.field textarea{
+  font-family:var(--sans);font-size:1rem;color:var(--light);
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.25);border-radius:4px;
+  padding:.8rem .9rem;width:100%;resize:vertical;
+}
+.field input:focus,.field textarea:focus{
+  border-color:var(--sun);background:rgba(255,255,255,.11);outline:none;
+}
+.field input[aria-invalid="true"]{border-color:#F2927A}
+.form__note{font-size:.85rem;color:var(--light-soft);margin:.7rem 0 0;max-width:40ch}
+@media (max-width:520px){.form{grid-template-columns:1fr}}
+
+/* ── footer ─────────────────────────────────────────────── */
+.foot{background:var(--strato);color:var(--light-soft);padding:3.5rem 0 4rem}
+.foot__inner{display:grid;gap:1rem}
+.foot__name{font-family:var(--serif);color:var(--light);font-size:1.05rem;margin:0}
+.foot__note{font-size:.84rem;line-height:1.7;max-width:70ch;margin:0;color:#8AA6C2}
+.foot__copy{font-size:.84rem;margin:0;color:#6B88A6}
