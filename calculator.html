@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Readiness Check — Davinder Pal Singh</title>
+<meta name="description" content="A self-assessment across nine dimensions that shape whether a goal gets reached — action, focus, exposure, conception, feeling, intention, belief, consistency and adoptability.">
+<meta name="theme-color" content="#BBD9F0">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_IN">
+<meta property="og:title" content="Readiness Check — Davinder Pal Singh">
+<meta property="og:description" content="Nine dimensions, eighteen questions. See where you stand and what to work on.">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/newsreader-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/plex-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/fonts.css">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/calculator.css">
+</head>
+<body class="calc-body">
+
+<a class="skip" href="#panel-intro">Skip to the check</a>
+
+<header class="topbar is-stuck" id="topbar">
+  <a class="topbar__name" href="index.html">Davinder Pal Singh</a>
+  <nav class="topbar__nav" aria-label="Main">
+    <a href="index.html#levels">Ten levels</a>
+    <a href="index.html#about">About</a>
+    <a class="topbar__cta" data-wa href="index.html#contact">Talk</a>
+  </nav>
+</header>
+
+<main class="calc">
+
+  <!-- ─────────────  intro  ───────────── -->
+  <section class="panel panel--intro is-on" id="panel-intro">
+    <div class="wrap calc__intro">
+      <p class="hero__role">Readiness Check</p>
+      <h1 class="calc__title">Where do you actually stand<br>on the thing you want?</h1>
+      <p class="calc__lede">
+        Nine dimensions decide whether a goal gets reached. Eighteen questions,
+        about four minutes. You will get a score out of 100, the two areas
+        holding you back most, and a seven-day experiment to work on.
+      </p>
+
+      <form id="startForm" class="calc__start" novalidate>
+        <label for="goal">Name one outcome — just one</label>
+        <input id="goal" type="text" maxlength="120"
+               placeholder="e.g. Open the second clinic by next March" autocomplete="off">
+        <p class="calc__hint" id="goalHint">One outcome at a time. The whole check measures your relationship with this one.</p>
+        <button class="btn btn--sun" type="submit">Begin the check</button>
+      </form>
+
+      <noscript>
+        <p class="calc__hint">This check needs JavaScript switched on to run.</p>
+      </noscript>
+
+      <p class="calc__disclaimer">
+        This is a structured self-assessment, not a prediction. It reflects what you
+        tell it about your current habits and mindset — it cannot know your
+        circumstances, your constraints or your luck, and no score here guarantees
+        an outcome either way.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────  assessment  ───────────── -->
+  <section class="panel panel--assess" id="panel-assess" aria-live="polite">
+    <div class="wrap">
+      <div class="progress">
+        <div class="progress__bar"><span class="progress__fill" id="progFill"></span></div>
+        <p class="progress__label" id="progLabel">Step 1 of 9</p>
+      </div>
+
+      <div class="step-head">
+        <h2 class="calc__h2" id="dimName">Action</h2>
+        <p class="calc__dimblurb" id="dimBlurb"></p>
+      </div>
+
+      <form id="qForm" class="qset"></form>
+
+      <div class="calc__nav">
+        <button class="btn btn--line" type="button" id="btnBack">Back</button>
+        <button class="btn btn--sun" type="button" id="btnNext">Next</button>
+      </div>
+      <p class="calc__hint" id="qHint" role="status"></p>
+    </div>
+  </section>
+
+  <!-- ─────────────  results  ───────────── -->
+  <section class="panel panel--results" id="panel-results">
+    <div class="wrap">
+      <p class="results__for" id="resultsFor"></p>
+
+      <div class="score">
+        <div class="score__figure">
+          <span class="score__num" id="scoreNum">0</span>
+          <span class="score__outof">/ 100</span>
+        </div>
+        <div class="score__read">
+          <h2 class="calc__h2" id="bandName">—</h2>
+          <p id="bandNote"></p>
+          <p class="score__resist" id="resistLine"></p>
+        </div>
+      </div>
+
+      <h3 class="results__h3">The five areas</h3>
+      <ul class="bars" id="composites"></ul>
+
+      <h3 class="results__h3">All nine dimensions</h3>
+      <ul class="bars bars--fine" id="dimensions"></ul>
+
+      <div class="callouts">
+        <div class="callout callout--block">
+          <h3>Biggest blocker</h3>
+          <p class="callout__name" id="blockerName">—</p>
+          <p id="blockerWhy"></p>
+        </div>
+        <div class="callout callout--strong">
+          <h3>Strongest dimension</h3>
+          <p class="callout__name" id="strongName">—</p>
+          <p id="strongWhy"></p>
+        </div>
+      </div>
+
+      <h3 class="results__h3">Your DO / DON’T board</h3>
+      <p class="results__sub" id="boardSub"></p>
+      <div class="board">
+        <div class="board__col board__col--do">
+          <h4>Do</h4>
+          <ul id="doList"></ul>
+        </div>
+        <div class="board__col board__col--dont">
+          <h4>Don’t</h4>
+          <ul id="dontList"></ul>
+        </div>
+      </div>
+
+      <h3 class="results__h3">Your seven-day experiment</h3>
+      <div class="experiment" id="experiment"></div>
+
+      <div class="history" id="history" hidden>
+        <h3 class="results__h3">Your checks over time</h3>
+        <p class="results__sub" id="historySub"></p>
+        <div id="historyChart"></div>
+      </div>
+
+      <div class="calc__nav calc__nav--end">
+        <button class="btn btn--sun" type="button" id="btnAgain">Check again</button>
+        <a class="btn btn--line" data-wa href="index.html#contact">Talk it through</a>
+      </div>
+      <p class="calc__disclaimer" id="endNote"></p>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__inner">
+    <p class="foot__name">Davinder Pal Singh — Life Architect Coach</p>
+    <p class="foot__note">This check is a reflection tool for lifestyle and personal development. It is not a diagnosis, a prediction, or a substitute for medical or psychological advice. Your answers stay in this browser and are not sent anywhere.</p>
+    <p class="foot__copy">© <span id="yr">2026</span> Davinder Pal Singh</p>
+  </div>
+</footer>
+
+<script src="assets/js/calculator-data.js"></script>
+<script src="assets/js/calculator.js"></script>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

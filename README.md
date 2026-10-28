@@ -28,6 +28,10 @@ index.html              the whole page
 assets/css/fonts.css    self-hosted @font-face
 assets/css/site.css     design tokens + all layout
 assets/js/site.js       WhatsApp links, enquiry form, altimeter
+calculator.html         the readiness check
+assets/css/calculator.css
+assets/js/calculator-data.js   weights, questions, DO/DON'T content
+assets/js/calculator.js        flow, scoring output, local history
 assets/fonts/           Newsreader + IBM Plex Sans (OFL)
 assets/davinder.jpg     portrait, used in the hero and About (+ .webp)
 assets/favicon.svg
@@ -60,6 +64,44 @@ rather than decoration.
 
 All text passes WCAG AA at 1440px and 390px, verified against rendered pixels.
 Keyboard focus is visible and `prefers-reduced-motion` is respected.
+
+## Readiness check (`calculator.html`)
+
+A self-assessment: nine weighted dimensions, two questions each (18 total),
+scored 0–10. It reports a score out of 100, five grouped areas, the biggest
+blocker, a DO/DON'T board and a seven-day experiment, and keeps a local
+history so repeat checks can be compared.
+
+| Dimension | Weight | | Dimension | Weight |
+|---|---|---|---|---|
+| Action | 25 | | Intention | 8 |
+| Focus | 20 | | Belief | 8 |
+| Exposure | 10 | | Consistency | 6 |
+| Conception | 10 | | Adoptability | 5 |
+| Feeling | 8 | | **Total** | **100** |
+
+**The model lives in `assets/js/calculator-data.js`.** Weights, question
+wording, and the DO/DON'T and experiment content are all data there — edit
+that file and the maths follows. The five reported areas are the
+`COMPOSITES` array; regroup them by editing the `of` lists.
+
+Three things worth knowing:
+
+1. **"Biggest blocker" is weighted drag, not the lowest score** —
+   `(10 − score) ÷ 10 × weight`. A 7/10 on Action (weight 25) drags more
+   than a 3/10 on Consistency (weight 6), which is the point of having
+   weights. The results page says so, because it surprises people.
+2. **Identity, Core Alignment and Resistance weren't defined in the brief.**
+   I grouped them as Identity = Feeling + Intention + Belief (24),
+   Core Alignment = Exposure + Conception (20), and Resistance = 100 − score.
+   Change the groupings in `COMPOSITES` if you meant something else.
+3. **It does not predict outcomes.** It reports what the user told it and
+   what to work on. Deliberately no "you will definitely achieve this" —
+   an unfalsifiable promise invites people to blame themselves when
+   circumstances, not effort, are what got in the way.
+
+Results are stored in `localStorage` under `dps.readiness.v1`, on the user's
+own device. Nothing is transmitted; there is no backend.
 
 ## Run locally
 
