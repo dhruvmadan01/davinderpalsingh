@@ -29,7 +29,7 @@ assets/css/fonts.css    self-hosted @font-face
 assets/css/site.css     design tokens + all layout
 assets/js/site.js       WhatsApp links, enquiry form, altimeter
 assets/fonts/           Newsreader + IBM Plex Sans (OFL)
-assets/davinder.jpg     portrait (+ .webp)
+assets/davinder.jpg     portrait, used in the hero and About (+ .webp)
 assets/favicon.svg
 ```
 
@@ -82,6 +82,16 @@ Self-hosted so the page never waits on a third-party request. Both faces are
 SIL Open Font License 1.1; licences are in `assets/fonts/`. Only the weights
 actually used ship (Newsreader 400 + italic, Plex 400/500/600), Latin subset
 only — about 45KB on the critical path.
+
+## The portrait
+
+`assets/davinder.*` is cropped from the supplied square, which was padded
+with filler bars down both sides — the real photo is only the middle 504px.
+The crop excludes those bars; don't re-crop from the original square without
+trimming them, or the bars reappear at the image edges.
+
+The same photo currently appears twice (hero and About). A second photo for
+one of the two would read better — drop it in and point the `<figure>` at it.
 
 ## Not built yet
 

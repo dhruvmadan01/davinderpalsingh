@@ -132,16 +132,35 @@ a{color:inherit}
 }
 /* hero shares the page's left edge rather than sitting in a narrower
    centred box, so hero / climb / bands all start on the same line */
+.hero__inner{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) clamp(230px,23vw,320px);
+  gap:clamp(2rem,4.5vw,3.5rem);
+  align-items:center;
+}
+.hero__photo{grid-column:2;grid-row:1;margin:0;position:relative}
+.hero__text {grid-column:1;grid-row:1}
+.hero__photo img{
+  width:100%;height:auto;display:block;border-radius:3px;
+  aspect-ratio:4/5;object-fit:cover;object-position:50% 26%;
+  box-shadow:0 22px 48px -26px rgba(14,36,64,.55);
+}
+.hero__photo::after{
+  content:"";position:absolute;inset:0;border-radius:3px;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(14,36,64,.1);
+}
 .hero__role{
   font-family:var(--serif);font-style:italic;
   font-size:clamp(1rem,.9rem + .4vw,1.2rem);
-  color:var(--ink-soft);margin:0 0 1.2rem;
+  /* sits lower on the gradient once the portrait stacks above it on
+     narrow screens, so it needs the darker of the two secondary inks */
+  color:var(--ink-mid);margin:0 0 1.2rem;
 }
 .hero__title{
   font-family:var(--serif);font-weight:400;
-  font-size:clamp(2.1rem,1.25rem + 3.5vw,3.6rem);
+  font-size:clamp(2.1rem,1.2rem + 3.1vw,3.3rem);
   line-height:1.26;letter-spacing:-.005em;
-  margin:0 0 1.5rem;max-width:860px;text-wrap:balance;
+  margin:0 0 1.5rem;text-wrap:balance;
 }
 .hero__title em{font-style:italic}
 .hero__lede{
@@ -156,9 +175,10 @@ a{color:inherit}
 }
 
 @media (prefers-reduced-motion:no-preference){
-  .hero__role,.hero__title,.hero__lede,.hero__actions{
+  .hero__role,.hero__title,.hero__lede,.hero__actions,.hero__photo{
     animation:rise .9s cubic-bezier(.22,.7,.3,1) backwards;
   }
+  .hero__photo{animation-delay:.2s}
   .hero__title{animation-delay:.08s}
   .hero__lede{animation-delay:.16s}
   .hero__actions{animation-delay:.24s}
@@ -166,6 +186,12 @@ a{color:inherit}
 }
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes widen{from{opacity:0;transform:scaleX(.3)}to{opacity:1;transform:none}}
+
+@media (max-width:900px){
+  .hero__inner{grid-template-columns:1fr;gap:1.75rem}
+  .hero__photo{grid-column:1;grid-row:1;width:min(185px,45%)}
+  .hero__text {grid-column:1;grid-row:2}
+}
 
 /* ── buttons ────────────────────────────────────────────── */
 .btn{
