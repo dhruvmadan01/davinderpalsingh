@@ -10,7 +10,7 @@
          While it is empty, the WhatsApp buttons simply scroll
          to the contact form — no broken link is shipped.
      ---------------------------------------------------------- */
-  var WHATSAPP_NUMBER = '';
+  var WHATSAPP_NUMBER = '917009925750';   // +91 70099 25750
 
   var configured = /^\d{10,15}$/.test(WHATSAPP_NUMBER);
   var DEFAULT_NOTE = 'Your message opens in WhatsApp — send it from there.';

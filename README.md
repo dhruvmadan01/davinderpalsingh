@@ -9,15 +9,16 @@ Static HTML/CSS/JS — no build step, no framework, no dependencies.
 
 | # | What | Where |
 |---|------|-------|
-| 1 | **WhatsApp number** — country code, no `+`, no spaces (e.g. `919812345678`) | `assets/js/site.js`, `WHATSAPP_NUMBER` at the top |
-| 2 | **Bio** — real background, years of practice, credentials | `index.html` → `#about` |
-| 3 | **Delivery language** — the Language row currently says sessions run in Hindi with English cohorts opening later. Confirm or correct it. | `index.html` → `#format` |
-| 4 | **Site address** for the share/OG link | `index.html` → `og:url` |
+| 1 | **Bio** — real background, years of practice, credentials | `index.html` → `#about` |
+| 2 | **Delivery language** — the Language row currently says sessions run in Hindi with English cohorts opening later. Confirm or correct it. | `index.html` → `#format` |
+| 3 | **Site address** for the share/OG link | `index.html` → `og:url` |
+
+The WhatsApp number is set (`917009925750`). To change it, edit
+`WHATSAPP_NUMBER` at the top of `assets/js/site.js` — country code, no `+`,
+no spaces. Every `[data-wa]` link and the enquiry form read from that one
+constant.
 
 Every such spot is marked with an `<!-- EDIT: ... -->` comment.
-
-**Until the number is set**, the WhatsApp buttons scroll to the contact form
-instead — no broken link ships, and a console warning explains why.
 
 ---
 
