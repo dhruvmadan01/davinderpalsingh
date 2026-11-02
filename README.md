@@ -9,8 +9,8 @@ Static HTML/CSS/JS — no build step, no framework, no dependencies.
 
 | # | What | Where |
 |---|------|-------|
-| 1 | **Bio** — real background, years of practice, credentials | `index.html` → `#about` |
-| 2 | **Delivery language** — the Language row currently says sessions run in Hindi with English cohorts opening later. Confirm or correct it. | `index.html` → `#format` |
+| 1 | **Everything in `CONTENT-NEEDED.md`** — founder story, level details, fees, sample lesson, feedback | see that file |
+| 2 | **Delivery language** for city batches | `index.html` → `#format` |
 | 3 | **Site address** for the share/OG link | `index.html` → `og:url` |
 
 The WhatsApp number is set (`917009925750`). To change it, edit
@@ -32,7 +32,10 @@ assets/js/site.js       WhatsApp links, enquiry form, altimeter
 calculator.html         the readiness check
 assets/css/calculator.css
 assets/js/calculator-data.js   weights, questions, DO/DON'T content
-assets/js/calculator.js        flow, scoring output, local history
+assets/js/calculator.js        flow, routing, report, tracker, local history
+tests/                  scoring and browser tests (not deployed)
+CONTENT-NEEDED.md       what Davinder must supply or confirm (not deployed)
+QA.md                   launch QA results (not deployed)
 assets/fonts/           Newsreader + IBM Plex Sans (OFL)
 assets/davinder.jpg     portrait, used in the hero and About (+ .webp)
 assets/favicon.svg
@@ -68,10 +71,10 @@ Keyboard focus is visible and `prefers-reduced-motion` is respected.
 
 ## Readiness check (`calculator.html`)
 
-A self-assessment: nine weighted dimensions, two questions each (18 total),
-scored 0–10. It reports a score out of 100, five grouped areas, the biggest
-blocker, a DO/DON'T board and a seven-day experiment, and keeps a local
-history so repeat checks can be compared.
+A reflection tool: nine weighted dimensions, two questions each (18 total),
+scored 0–10. It reports a reflection score out of 100, a personal reading, next
+actions, a breakdown, a seven-day experiment with a tracker, a DO/DON'T board,
+a copyable and downloadable report, and a follow-up comparison per outcome.
 
 | Dimension | Weight | | Dimension | Weight |
 |---|---|---|---|---|
@@ -96,13 +99,23 @@ Three things worth knowing:
    I grouped them as Identity = Feeling + Intention + Belief (24),
    Core Alignment = Exposure + Conception (20), and Resistance = 100 − score.
    Change the groupings in `COMPOSITES` if you meant something else.
-3. **It does not predict outcomes.** It reports what the user told it and
-   what to work on. Deliberately no "you will definitely achieve this" —
-   an unfalsifiable promise invites people to blame themselves when
-   circumstances, not effort, are what got in the way.
+3. **It does not predict outcomes.** The score must never be worded as a
+   probability of reaching a goal. The weights express this coaching
+   framework's emphasis and have not been statistically validated, and the
+   site says so wherever the score appears.
 
-Results are stored in `localStorage` under `dps.readiness.v1`, on the user's
-own device. Nothing is transmitted; there is no backend.
+Progress is kept in the URL hash (`#q1`–`#q9`, `#results`), so refresh and the
+browser's Back button work. Saved checks live in `localStorage` under
+`dps.readiness.v1`, and an unfinished check under `dps.readiness.draft.v1`. Both
+stay on the user's device. The only way anything leaves is the WhatsApp button,
+which the user presses and can read first.
+
+## Tests
+
+```bash
+node tests/scoring.test.js        # scoring, determinism, wording
+node tests/browser.test.js        # phone sizes and QA flows (needs Playwright)
+```
 
 ## Run locally
 
@@ -136,8 +149,16 @@ trimming them, or the bars reappear at the image edges.
 The same photo currently appears twice (hero and About). A second photo for
 one of the two would read better — drop it in and point the `<figure>` at it.
 
+## Turning on the sample lesson and feedback
+
+Both sections are built and hidden until there is real content.
+
+- **Sample lesson:** set `SAMPLE_LESSON_ID` in `assets/js/site.js`. Also add a
+  line to the privacy section, because playing the video loads YouTube.
+- **Participant feedback:** remove `hidden` from `#feedback` in `index.html` and
+  replace the sample card.
+
 ## Not built yet
 
 - A Hindi version, if the Hindi-speaking audience needs its own page
 - A page per level, with the recorded/live breakdown and fees
-- Real testimonials and outcomes — deliberately left out rather than invented

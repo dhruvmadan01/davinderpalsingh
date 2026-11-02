@@ -23,6 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      # working notes and tests don't belong on the public site
+      - run: rm -rf tests README.md CONTENT-NEEDED.md QA.md
       - uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
