@@ -1,5 +1,5 @@
 /* ============================================================
-   Readiness Check — model and content
+   Manifestation Calculator — model and content
    ------------------------------------------------------------
    DIMENSIONS carry the weights. Each has two questions scored
    0–10, so a dimension score is their mean.
@@ -21,7 +21,7 @@ window.FMR = (function () {
       key: 'action', name: 'Action', weight: 25,
       blurb: 'What you actually do, as opposed to what you plan, research or intend.',
       questions: [
-        { text: 'Over the last seven days, how much did you actually do toward this outcome — not planned, not researched, did?',
+        { text: 'Over the last seven days, how much did you actually do toward solving this — not planned, not researched, did?',
           low: 'Nothing moved', high: 'Something every day' },
         { text: 'When you know what the next step is, how quickly do you take it?',
           low: 'It sits for weeks', high: 'Usually the same day' }
@@ -32,18 +32,18 @@ window.FMR = (function () {
       dont: ['Don’t let research or planning count as progress.',
              'Don’t wait for a complete plan before the first step.',
              'Don’t reorganise your system instead of using it.'],
-      experiment: 'For seven days, take one visible action on this outcome before 11am — however small — and log it in a single line.'
+      experiment: 'For seven days, take one visible action on this before 11am — however small — and log it in a single line.'
     },
     {
       key: 'focus', name: 'Focus', weight: 20,
-      blurb: 'How much of your attention stays on one outcome instead of splitting across many.',
+      blurb: 'How much of your attention stays on one thing instead of splitting across many.',
       questions: [
-        { text: 'How much of your attention stays on this one outcome rather than spreading across other goals?',
+        { text: 'How much of your attention stays on solving this rather than spreading across other goals?',
           low: 'Split many ways', high: 'Almost entirely this' },
         { text: 'When you sit down to work on it, how long before you reach for your phone or something else?',
           low: 'Almost immediately', high: 'I stay with it' }
       ],
-      do: ['Name the one outcome this season belongs to, and put the rest on a parked list.',
+      do: ['Name the one problem this season belongs to, and put the rest on a parked list.',
            'Protect one block a day where only this gets worked on.',
            'Keep the phone in another room for that block.'],
       dont: ['Don’t begin a second major goal until this one has moved.',
@@ -55,47 +55,47 @@ window.FMR = (function () {
       key: 'exposure', name: 'Exposure', weight: 10,
       blurb: 'Contact with the goal or the material — being near the thing itself.',
       questions: [
-        { text: 'How often do you put yourself in front of the thing you want — the place, the people, the material?',
+        { text: 'How often do you put yourself in front of what would solve this — the place, the people, the material?',
           low: 'Almost never', high: 'Regularly' },
         { text: 'How much do you encounter the real thing rather than pictures and talk about it?',
           low: 'Only at a distance', high: 'Up close, often' }
       ],
-      do: ['Go where this outcome already exists — the place, the room, the people.',
+      do: ['Go where this has already been solved — the place, the room, the people.',
            'Spend time each week with someone already living it.',
            'Handle the real thing rather than images of it.'],
       dont: ['Don’t substitute scrolling for being there.',
-             'Don’t study the outcome only from a distance.',
+             'Don’t study the solution only from a distance.',
              'Don’t avoid the environment because you feel out of place in it yet.'],
-      experiment: 'For seven days, put yourself in direct contact with this outcome once a day — a visit, a call, a real conversation.'
+      experiment: 'For seven days, put yourself in direct contact with the solution once a day — a visit, a call, a real conversation.'
     },
     {
       key: 'conception', name: 'Conception', weight: 10,
       blurb: 'Conceiving the possibility for yourself out of what you have been exposed to.',
       questions: [
-        { text: 'When you see someone already living this outcome, how real does it feel that it could be you?',
+        { text: 'When you see someone who has already solved this, how real does it feel that it could be you?',
           low: 'Another world', high: 'Entirely plausible' },
-        { text: 'Can you picture the specific version of this outcome that is yours — concrete details, not a vague idea?',
+        { text: 'Can you picture your life with this solved — concrete details, not a vague idea?',
           low: 'Very vague', high: 'Sharp and specific' }
       ],
       do: ['Write the specific version that is yours, with numbers and details in it.',
            'Find three people who began where you are and reached it.',
-           'Describe the ordinary day you would have after it arrives.'],
+           'Describe the ordinary day you would have once this is solved.'],
       dont: ['Don’t keep the goal vague enough to stay safe.',
              'Don’t dismiss examples as different circumstances without checking.',
-             'Don’t picture only the moment of arrival.'],
-      experiment: 'For seven days, spend five minutes writing one concrete detail of life after this outcome — a different detail each day.'
+             'Don’t picture only the moment it gets solved.'],
+      experiment: 'For seven days, spend five minutes writing one concrete detail of life after this is solved — a different detail each day.'
     },
     {
       key: 'feeling', name: 'Feeling', weight: 8,
-      blurb: 'The emotional state you work from, and how often you already feel the outcome.',
+      blurb: 'The emotional state you work from, and how often you already feel the relief of it being solved.',
       questions: [
-        { text: 'When you think about this outcome, what is the dominant feeling?',
+        { text: 'When you think about this problem, what is the dominant feeling?',
           low: 'Pressure and anxiety', high: 'Ease and warmth' },
-        { text: 'How often do you already feel some version of what having it would feel like?',
+        { text: 'How often do you already feel some version of what solving it would feel like?',
           low: 'Never', high: 'Most days' }
       ],
-      do: ['Notice the feeling this goal brings up before you start working on it.',
-           'Spend a few minutes a day in the feeling of already having it.',
+      do: ['Notice the feeling this problem brings up before you start working on it.',
+           'Spend a few minutes a day in the feeling of it already being solved.',
            'Work from calm rather than pressure wherever you get the choice.'],
       dont: ['Don’t use anxiety as the engine.',
              'Don’t force the feeling; start from something nearby that is already easy to feel.',
@@ -121,9 +121,9 @@ window.FMR = (function () {
     },
     {
       key: 'belief', name: 'Belief', weight: 8,
-      blurb: 'Whether you hold yourself as the kind of person this happens for.',
+      blurb: 'Whether you hold yourself as the kind of person who can solve this.',
       questions: [
-        { text: 'Do you believe you are the kind of person this outcome happens for?',
+        { text: 'Do you believe you are the kind of person who can solve this?',
           low: 'Not really', high: 'Without question' },
         { text: 'When something goes wrong, what does it tend to mean to you?',
           low: 'Proof it will not work', high: 'Just information' }
@@ -196,7 +196,7 @@ window.FMR = (function () {
      so keep the most telling ones at the top. */
   var PATTERNS = [
     { high: 'conception', low: 'action',
-      text: 'You can see this outcome clearly, but what you can see is ahead of what you are doing. More planning will not close that gap; small visible actions will.' },
+      text: 'You can see the solution clearly, but what you can see is ahead of what you are doing. More planning will not close that gap; small visible actions will.' },
     { high: 'belief', low: 'action',
       text: 'You believe in this more than your last week shows. The belief is useful, and it needs something to stand on.' },
     { high: 'action', low: 'focus',
@@ -384,12 +384,12 @@ window.FMR = (function () {
   /* The copy/download version of the report. */
   function reportText(answers, goal, dateText, tracker) {
     var r = score(answers), L = [];
-    L.push('READINESS CHECK: YOUR REPORT');
+    L.push('MANIFESTATION CALCULATOR: YOUR REPORT');
     L.push('Davinder Pal Singh, Life Architect Coach');
     if (dateText) L.push(dateText);
     L.push('');
-    L.push('Outcome: ' + goal);
-    L.push('Reflection score: ' + r.total + ' / 100 (' + r.band.name + ')');
+    L.push('Problem: ' + goal);
+    L.push('Manifestation score: ' + r.total + ' / 100 (' + r.band.name + ')');
     L.push(r.band.note);
     L.push('');
     L.push('YOUR READING');

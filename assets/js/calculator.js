@@ -1,5 +1,5 @@
 /* ============================================================
-   Readiness Check — flow, rendering, local history
+   Manifestation Calculator — flow, rendering, local history
    Depends on calculator-data.js (window.FMR)
 
    Where you are lives in the URL hash (#q1…#q9, #results), so
@@ -201,7 +201,7 @@
     go('#q1');
   }
 
-  var GOAL_HINT = 'One outcome at a time. The whole check looks at your relationship with this one.';
+  var GOAL_HINT = 'One problem at a time. Every question is about this one.';
 
   $('startForm').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -209,7 +209,7 @@
     if (!g) {
       $('goal').setAttribute('aria-invalid', 'true');
       $('goal').focus();
-      $('goalHint').textContent = 'Name the outcome first. The questions are all about this one thing.';
+      $('goalHint').textContent = 'Write your problem first. Every question is about it.';
       return;
     }
     $('goal').removeAttribute('aria-invalid');
@@ -397,7 +397,7 @@
     current = entry;
     var r = F.score(entry.answers), goal = entry.goal;
 
-    $('resultsFor').textContent = 'Your outcome: ' + goal;
+    $('resultsFor').textContent = 'Your problem: ' + goal;
     $('resultsDate').textContent = dateText(entry.at);
     $('scoreNum').textContent = r.total;
     $('bandName').textContent = r.band.name;
@@ -454,7 +454,7 @@
     }
 
     var exp = r.blocker ? F.dimByKey(r.blocker.key).experiment
-      : 'For seven days, keep doing the one habit that matters most for this outcome, and note it in a single line.';
+      : 'For seven days, keep doing the one habit that matters most here, and note it in a single line.';
     $('experimentDim').textContent = r.blocker ? 'Working on ' + r.blocker.name : 'Holding what works';
     $('experimentText').textContent = exp;
     renderTracker(entry);
@@ -464,8 +464,8 @@
     var talk = $('btnTalk');
     if (window.dpsWaLink) {
       talk.href = window.dpsWaLink([
-        'Hello, I took the Readiness Check.',
-        'Outcome: ' + goal,
+        'Hello, I took the Manifestation Calculator.',
+        'Problem: ' + goal,
         'Score: ' + r.total + ' / 100',
         r.blocker ? 'Biggest area to work on: ' + r.blocker.name : '',
         'I’d like to talk it through.'
@@ -582,7 +582,7 @@
     var days = Math.max(0, Math.round((now.at - prev.at) / 86400000));
     $('historySub').textContent =
       (delta === 0 ? 'No change' : (delta > 0 ? 'Up ' + delta : 'Down ' + Math.abs(delta)) + ' points') +
-      ' since your last check on this outcome' +
+      ' since your last check on this problem' +
       (days ? ', ' + days + ' day' + (days === 1 ? '' : 's') + ' ago' : '') +
       '. This shows how your own answers have moved, not a measured change in your life.';
 
@@ -613,7 +613,7 @@
 
     $('historyChart').innerHTML =
       '<svg viewBox="0 0 ' + W + ' ' + H + '" class="chart" role="img" aria-label="' +
-      'Readiness scores across your last ' + n + ' checks on this outcome, most recent ' +
+      'Manifestation scores across your last ' + n + ' checks on this problem, most recent ' +
       now.total + ' out of 100">' +
       grid + '<polyline class="chart__line" points="' + pts + '"/>' + dots + '</svg>';
   }
@@ -653,7 +653,7 @@
     var url = URL.createObjectURL(new Blob([reportNow()], { type: 'text/plain;charset=utf-8' }));
     var a = document.createElement('a');
     a.href = url;
-    a.download = 'readiness-report.txt';
+    a.download = 'manifestation-report.txt';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -668,6 +668,10 @@
     $('goal').value = '';
     go('');
   });
+
+  // the problem typed on the homepage carries over, so nobody types it twice
+  var carried = load('dps.problem.v1');
+  if (typeof carried === 'string' && carried) $('goal').value = carried.slice(0, 120);
 
   window.addEventListener('hashchange', route);
   route();
