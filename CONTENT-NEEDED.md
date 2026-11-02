@@ -67,6 +67,12 @@ The new "My story" section is translated from his recording into first-person En
 | Level 8 | The Seven Aspects of Life | "Seven Spirits of Life" in the transcript | Which name is right? |
 | Language | Changed to Punjabi-speaking so far | Punjabi-speaking people | Language for city batches? |
 
+## 2c. New opening of the homepage
+
+- **"You have told me your problem. Let me tell you mine."** and the problem examples ("I can't sleep", "Work feels like a fight", "Money never stays", "My family is drifting apart") are my wording. Please approve.
+- **The name:** the tool is now called the Manifestation Calculator everywhere. It still says plainly that the score is for reflection and is not the chance of solving the problem.
+- **"The fall, again and again"** is a new chapter title, replacing "Twenty-six businesses".
+
 ## 3. Wording I changed, for him to approve
 
 | Was | Now | Why |

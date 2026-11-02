@@ -1,6 +1,6 @@
 # Davinder Pal Singh — Life Architect Coach
 
-Landing page for a ten-level coaching journey.
+Story-led site for a ten-level coaching journey.
 Static HTML/CSS/JS — no build step, no framework, no dependencies.
 
 ---
@@ -29,7 +29,7 @@ index.html              the whole page
 assets/css/fonts.css    self-hosted @font-face
 assets/css/site.css     design tokens + all layout
 assets/js/site.js       WhatsApp links, enquiry form, altimeter
-calculator.html         the readiness check
+calculator.html         the Manifestation Calculator
 assets/css/calculator.css
 assets/js/calculator-data.js   weights, questions, DO/DON'T content
 assets/js/calculator.js        flow, routing, report, tracker, local history
@@ -42,6 +42,17 @@ assets/favicon.svg
 ```
 
 ## Design
+
+The homepage opens with one question, "What is your problem?". Answering or
+skipping reveals the rest. The gate is set by an inline script in `<head>`, so
+without JavaScript nothing is hidden, and any link with a `#section` skips it.
+The answer is kept in `localStorage` (`dps.problem.v1`), is shown back in the
+story, and prefills the calculator. It never leaves the device and never goes
+in a URL.
+
+The story runs from night to dawn, and a sun rises with scroll (`--rise`). Each
+scene owns its own background and ink, and the change from light to dark ink
+happens only across `.dawnbreak`, which has no text in it. Keep it that way.
 
 The page is **one continuous sky**. Scrolling down means climbing: a warm dawn
 horizon at the top, pale morning through the ten levels, then deep azure and
@@ -69,7 +80,7 @@ rather than decoration.
 All text passes WCAG AA at 1440px and 390px, verified against rendered pixels.
 Keyboard focus is visible and `prefers-reduced-motion` is respected.
 
-## Readiness check (`calculator.html`)
+## Manifestation Calculator (`calculator.html`)
 
 A reflection tool: nine weighted dimensions, two questions each (18 total),
 scored 0–10. It reports a reflection score out of 100, a personal reading, next

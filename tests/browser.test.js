@@ -18,7 +18,7 @@ async function audit(p,label){
  for(const [name,s] of Object.entries(sizes)){
   const ctx=await br.newContext({viewport:s.viewport,deviceScaleFactor:s.dsf,isMobile:s.viewport.width<1000,hasTouch:s.viewport.width<1000,userAgent:s.viewport.width<500?devices['iPhone 14'].userAgent:undefined});
   const p=await ctx.newPage(); const errs=[];p.on('pageerror',e=>errs.push(e.message));p.on('console',m=>{if(m.type()==='error')errs.push(m.text())});
-  await p.goto(B+'index.html');await audit(p,name+' home');
+  await p.goto(B+'index.html');await audit(p,name+' question');await p.click('#askSkip');await p.waitForTimeout(150);await audit(p,name+' home');
   await p.screenshot({path:`${SHOTS}/${s.viewport.width}-home.png`,fullPage:true});
   await p.goto(B+'calculator.html');await audit(p,name+' intro');
   await p.fill('#goal','Sleep through the night');await p.click('#startForm button');await p.waitForSelector('#panel-assess.is-on');
@@ -64,8 +64,8 @@ async function audit(p,label){
  await p.$$eval('#trackerDays input',(l)=>l[0].click());await p.$$eval('#trackerDays input',(l)=>l[2].click());await p.fill('#trackerNote','Slept better on day 3');
  await p.reload();await p.waitForTimeout(100);ok('tracker persists',await p.locator('#trackerDays input:checked').count()===2&&(await p.inputValue('#trackerNote'))==='Slept better on day 3');
  ok('tracker status',(await p.textContent('#trackerStatus')).includes('2 of 7'));
- await p.click('#btnCopy');await p.waitForTimeout(100);const clip=await p.evaluate(()=>navigator.clipboard.readText()).catch(e=>'ERR '+e);ok('copy report',clip.includes('Reflection score')&&clip.includes('not a prediction')&&clip.includes('2 of 7'),clip.slice(0,40));
- const [dl]=await Promise.all([p.waitForEvent('download'),p.click('#btnDownload')]);ok('download report',dl.suggestedFilename()==='readiness-report.txt');
+ await p.click('#btnCopy');await p.waitForTimeout(100);const clip=await p.evaluate(()=>navigator.clipboard.readText()).catch(e=>'ERR '+e);ok('copy report',clip.includes('Manifestation score')&&clip.includes('not a prediction')&&clip.includes('2 of 7'),clip.slice(0,40));
+ const [dl]=await Promise.all([p.waitForEvent('download'),p.click('#btnDownload')]);ok('download report',dl.suggestedFilename()==='manifestation-report.txt');
  const wa=await p.getAttribute('#btnTalk','href');ok('WhatsApp carries result',wa.startsWith('https://wa.me/917009925750')&&decodeURIComponent(wa).includes('Score:'),wa.slice(0,60));
  // identical inputs in a clean browser
  const c2=await br.newContext({...devices['iPhone 14']});const q=await c2.newPage();await q.goto(B+'calculator.html');await q.fill('#goal','<img src=x onerror=alert(1)> “Quoted”');await q.click('#startForm button');await q.waitForSelector('#panel-assess.is-on');await answer(q,pick);
@@ -87,7 +87,27 @@ async function audit(p,label){
  const c3=await br.newContext({...devices['iPhone 14']});const r=await c3.newPage();const e3=[];r.on('pageerror',e=>e3.push(e.message));await r.goto(B+'calculator.html');await r.evaluate(()=>{localStorage['dps.readiness.v1']='{bad';localStorage['dps.readiness.draft.v1']='nope'});await r.reload();await r.waitForTimeout(100);ok('corrupt storage survives',await r.isVisible('#panel-intro.is-on')&&e3.length===0,e3.join(';'));await c3.close();
  const c4=await br.newContext({...devices['iPhone 14']});await c4.addInitScript(()=>{Object.defineProperty(window,'localStorage',{get(){throw new Error('blocked')}})});const s=await c4.newPage();const e4=[];s.on('pageerror',e=>e4.push(e.message));await s.goto(B+'calculator.html');await s.fill('#goal','Blocked');await s.click('#startForm button');await s.waitForSelector('#panel-assess.is-on');await answer(s,()=>6);ok('works with storage blocked',(await s.textContent('#scoreNum'))==='60'&&e4.length===0,e4.join(';'));await c4.close();
  // homepage
- const c5=await br.newContext({...devices['iPhone 14']});const h5=await c5.newPage();await h5.goto(B+'index.html');
+ const c6=await br.newContext({...devices['iPhone 14']});const a=await c6.newPage();const ea=[];a.on('pageerror',e=>ea.push(e.message));await a.goto(B+'index.html');
+ ok('landing shows only the question',await a.isVisible('#askInput')&&!(await a.isVisible('#hero'))&&!(await a.isVisible('.topbar'))&&!(await a.isVisible('.foot')));
+ await a.click('#askForm button');ok('empty problem stays on question',!(await a.isVisible('#hero'))&&(await a.textContent('#askHint')).includes('few words'));
+ await a.fill('#askInput','<b>I can\u2019t sleep</b>');await a.press('#askInput','Enter');await a.waitForTimeout(1200);
+ ok('entering moves forward',await a.isVisible('#hero')&&(await a.evaluate(()=>scrollY))>200,String(await a.evaluate(()=>scrollY)));
+ ok('problem echoed as text',(await a.textContent('#echoWords')).includes('<b>')&&await a.locator('#echoWords b').count()===0);
+ ok('topbar readable over night',await a.evaluate(()=>document.getElementById('topbar').classList.contains('is-high')));
+ const sun0=await a.evaluate(()=>getComputedStyle(document.getElementById('sun')).getPropertyValue('--rise'));
+ await a.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';document.getElementById('dawnbreak').scrollIntoView()});await a.waitForTimeout(300);
+ const sun1=await a.evaluate(()=>document.getElementById('sun').style.getPropertyValue('--rise'));ok('sun rises with scroll',parseFloat(sun1)>parseFloat(sun0||0)+.2,sun0+' -> '+sun1);
+ ok('paragraph being read is lit',await a.evaluate(()=>{const n=document.querySelector('.scene--4 .scene__inner');n.scrollIntoView({block:'center'});return new Promise(r=>setTimeout(()=>r(n.classList.contains('is-lit')),250))}));
+ await a.evaluate(()=>document.querySelector('.scene--close').scrollIntoView());await a.waitForTimeout(200);ok('story close names the problem',(await a.textContent('#closeYours')).includes('sleep'));
+ await a.click('.scene--close .btn--sun');await a.waitForSelector('#goal');ok('problem carried into calculator',(await a.inputValue('#goal')).includes('sleep'));
+ await a.goto(B+'index.html');await a.waitForTimeout(100);ok('same visit does not ask again',await a.isVisible('#hero'));
+ ok('no errors on landing flow',ea.length===0,ea.join(';'));await c6.close();
+ const c7=await br.newContext({...devices['iPhone 14']});const c=await c7.newPage();await c.goto(B+'index.html#privacy');await c.waitForTimeout(150);ok('deep links bypass the question',await c.isVisible('#privacy'));await c.goto(B+'calculator.html');await c.close();
+ const d=await c7.newPage();await d.goto(B+'index.html');await d.evaluate(()=>{sessionStorage.clear();localStorage.clear()});await d.reload();await d.click('.chip');await d.waitForTimeout(200);ok('chip enters with that problem',(await d.textContent('#echoWords')).includes('sleep'));
+ await d.evaluate(()=>{sessionStorage.clear();localStorage.clear()});await d.reload();await d.fill('#askInput','I want to die');await d.press('#askInput','Enter');await d.waitForTimeout(200);ok('helpline shown for danger words',await d.isVisible('#echoHelp'));
+ await d.evaluate(()=>{sessionStorage.clear();localStorage.clear()});await d.reload();await d.fill('#askInput','Money never stays');await d.press('#askInput','Enter');await d.waitForTimeout(200);ok('helpline hidden otherwise',!(await d.isVisible('#echoHelp')));await c7.close();
+ const c8=await br.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});const n=await c8.newPage();await n.goto(B+'index.html');ok('without JavaScript everything shows',await n.isVisible('#hero')&&await n.isVisible('.scene--5')&&await n.isVisible('#levels'));await c8.close();
+ const c5=await br.newContext({...devices['iPhone 14']});const h5=await c5.newPage();await h5.goto(B+'index.html');await h5.click('#askSkip');await h5.waitForTimeout(100);
  ok('10 level detail panels',await h5.locator('.step__more').count()===10);ok('5 fields each',await h5.locator('.level > div').count()===50);
  ok('sample lesson hidden until supplied',!(await h5.isVisible('#sample')));ok('feedback hidden until supplied',!(await h5.isVisible('#feedback')));
  ok('hero leads to check',(await h5.getAttribute('.hero__actions .btn--sun','href'))==='calculator.html');

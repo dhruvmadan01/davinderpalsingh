@@ -26,7 +26,7 @@
            (text ? '?text=' + encodeURIComponent(text) : '');
   }
 
-  // the readiness check builds its own pre-filled message
+  // the Manifestation Calculator builds its own pre-filled message
   if (configured) window.dpsWaLink = waLink;
 
   if (configured) {
@@ -105,12 +105,103 @@
     });
   }
 
+  /* ── the opening question ───────────────────────────────── */
+  var root     = document.documentElement;
+  var askForm  = document.getElementById('askForm');
+  var askInput = document.getElementById('askInput');
+  var PROBLEM  = 'dps.problem.v1';
+  var ASK_HINT = 'Only you can see this. It stays on your device.';
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function showProblem(text) {
+    var words = document.getElementById('echoWords');
+    var line  = document.getElementById('echoLine');
+    var help  = document.getElementById('echoHelp');
+    var close = document.getElementById('closeYours');
+    words.hidden = !text;
+    close.hidden = !text;
+    if (text) {
+      words.textContent = '“' + text + '”';
+      close.textContent = 'You wrote: “' + text + '”. Let’s see where you stand on it.';
+      line.textContent = 'You have told me your problem. Let me tell you mine.';
+    } else {
+      line.textContent = 'Before you tell me your problem, let me tell you mine.';
+    }
+    help.hidden = !(text && /suicid|kill (my ?self|me)|end (my|it all)|end my life|want to die|wanna die|don.?t want to (live|be here)|no reason to live|khud.?kushi|marna chah|mar jana|जान दे|आत्महत्या|खुदकुशी|मरना चाह/i.test(text));
+  }
+
+  function enter(text) {
+    root.classList.remove('is-asking');
+    try { sessionStorage.setItem('dps.entered', '1'); } catch (e) { /* the page still opens */ }
+    if (text) {
+      try { localStorage.setItem(PROBLEM, JSON.stringify(text)); } catch (e) { /* carries no further */ }
+    }
+    showProblem(text);
+    onScroll();
+    var echo = document.getElementById('echo');
+    window.requestAnimationFrame(function () {
+      echo.scrollIntoView({ behavior: calm ? 'auto' : 'smooth' });
+      var target = document.getElementById('echoLine');
+      target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+    });
+  }
+
+  if (askForm) {
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(PROBLEM)); } catch (e) { saved = null; }
+    if (typeof saved === 'string' && saved) {
+      askInput.value = saved;
+      showProblem(saved);
+    }
+
+    askForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var v = askInput.value.trim();
+      if (!v) {
+        askInput.setAttribute('aria-invalid', 'true');
+        askInput.focus();
+        document.getElementById('askHint').textContent = 'Write your problem in a few words, or choose one below.';
+        return;
+      }
+      enter(v);
+    });
+    askInput.addEventListener('input', function () {
+      askInput.removeAttribute('aria-invalid');
+      document.getElementById('askHint').textContent = ASK_HINT;
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.chip'), function (c) {
+      c.addEventListener('click', function () {
+        askInput.value = c.textContent;
+        enter(c.textContent);
+      });
+    });
+    document.getElementById('askSkip').addEventListener('click', function () {
+      enter(askInput.value.trim());
+    });
+
+    // the paragraph you are reading is lit; the rest wait in the dark
+    var scenes = document.querySelectorAll('.scene__inner');
+    if ('IntersectionObserver' in window) {
+      var seen = new IntersectionObserver(function (list) {
+        list.forEach(function (it) { it.target.classList.toggle('is-lit', it.isIntersecting); });
+      }, { rootMargin: '-30% 0px -30% 0px' });
+      Array.prototype.forEach.call(scenes, function (n) { seen.observe(n); });
+    } else {
+      root.classList.remove('js');
+    }
+  }
+
   /* ── altimeter: fill the rail, light the current level ──── */
   var ladder = document.getElementById('ladder');
   var fill   = document.getElementById('railFill');
   var steps  = Array.prototype.slice.call(document.querySelectorAll('.step'));
   var topbar = document.getElementById('topbar');
   var deep   = document.getElementById('format');
+  var hero   = document.getElementById('hero');
+  var story  = document.getElementById('story');
+  var sun    = document.getElementById('sun');
+  var dawn   = document.getElementById('dawnbreak');
 
   var ticking = false;
 
@@ -135,8 +226,19 @@
     if (topbar) {
       topbar.classList.toggle('is-stuck', window.scrollY > 24);
       if (deep) {
-        topbar.classList.toggle('is-high', deep.getBoundingClientRect().top <= 56);
+        var night = hero && hero.getBoundingClientRect().top > 56;
+        topbar.classList.toggle('is-high', night || deep.getBoundingClientRect().top <= 56);
       }
+    }
+
+    // the sun stays below the horizon through the story, and rises at dawn
+    if (sun && story && dawn && !calm) {
+      var vh = window.innerHeight;
+      var s = story.getBoundingClientRect();
+      var d = dawn.getBoundingClientRect();
+      var through = Math.max(0, Math.min(1, -s.top / Math.max(1, d.top - s.top)));
+      var dawning = Math.max(0, Math.min(1, (vh - d.top) / (d.height + vh * 0.5)));
+      sun.style.setProperty('--rise', (through * 0.16 + dawning * 1.0).toFixed(4));
     }
   }
 

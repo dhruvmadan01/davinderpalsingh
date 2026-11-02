@@ -1,7 +1,7 @@
 # Launch QA results
 
-Run on 2 November 2026 with `tests/scoring.test.js` and `tests/browser.test.js`.
-**All automated checks pass:** 518,065 scoring answer sets and 152 browser checks.
+Last run on 2 November 2026 with `tests/scoring.test.js` and `tests/browser.test.js`.
+**All automated checks pass:** 518,065 scoring answer sets and 189 browser checks, including the new opening question and story.
 
 These ran in Chromium with phone emulation. **They have not been run in real Safari
 or on a physical iPhone**, so item 1 still needs a hands-on pass.

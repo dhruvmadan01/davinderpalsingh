@@ -154,6 +154,113 @@ a{color:inherit}
   content:"";position:absolute;inset:0;border-radius:3px;pointer-events:none;
   box-shadow:inset 0 0 0 1px rgba(14,36,64,.1);
 }
+/* ── the question ────────────────────────────────────────── */
+/* until someone answers or skips, this is the whole page. Everything stays in
+   the document without JavaScript: only the inline head script can gate it. */
+html.is-asking body{background:var(--strato)}
+html.is-asking main > :not(#ask),
+html.is-asking .topbar,
+html.is-asking .foot,
+html.is-asking .skip{display:none}
+
+.ask{
+  min-height:100vh;min-height:100svh;display:grid;align-items:center;
+  padding:var(--gutter);color:var(--light);
+  background:linear-gradient(180deg,#040F20 0%,var(--strato) 62%,#0A2449 100%);
+}
+.ask__inner{width:min(860px,100%);margin-inline:auto}
+.ask__who{font-family:var(--serif);font-size:1.05rem;color:var(--light-soft);margin:0 0 clamp(2rem,8vh,4.5rem)}
+.ask__q{
+  font-family:var(--serif);font-weight:400;margin:0 0 clamp(1.6rem,4vh,2.6rem);
+  font-size:clamp(2.7rem,1.3rem + 7vw,6.2rem);line-height:1.08;letter-spacing:-.015em;text-wrap:balance;
+}
+.ask__q label{display:block}
+.ask__row{display:grid;grid-template-columns:1fr auto;gap:.7rem;max-width:720px}
+.ask__row input{
+  font-family:var(--serif);font-size:clamp(1.15rem,1rem + .7vw,1.45rem);color:var(--light);
+  width:100%;min-height:56px;padding:.7rem .15rem;
+  background:transparent;border:0;border-bottom:2px solid var(--sun);border-radius:0;
+}
+.ask__row input::placeholder{color:#9FBAD6;opacity:1}
+.ask__row input:focus{outline:none;background:rgba(255,255,255,.05)}
+.ask__row input[aria-invalid="true"]{border-bottom-color:#F2927A}
+.ask__hint{font-size:.95rem;color:var(--light-soft);margin:.8rem 0 0}
+.ask__chips{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:clamp(1.6rem,4vh,2.4rem)}
+.chip{
+  font-family:var(--sans);font-size:.95rem;color:var(--light);cursor:pointer;
+  min-height:44px;padding:.4rem .95rem;border-radius:999px;
+  background:transparent;border:1px solid rgba(234,243,251,.32);
+}
+.chip:hover{border-color:var(--sun)}
+.ask__skip{
+  display:block;margin-top:1.2rem;padding:.6rem 0;min-height:44px;cursor:pointer;
+  font-family:var(--sans);font-size:.95rem;color:var(--light-soft);
+  background:none;border:0;text-decoration:underline;text-underline-offset:3px;
+}
+@media (max-width:520px){.ask__row{grid-template-columns:1fr}.ask__row .btn{justify-self:start}}
+
+/* ── the story · night to dawn ───────────────────────────── */
+.story{position:relative;isolation:isolate;overflow:clip}
+.story__sky{
+  position:sticky;top:0;z-index:1;height:100vh;height:100svh;margin-bottom:-100vh;margin-bottom:-100svh;
+  overflow:hidden;pointer-events:none;
+}
+.sun{
+  --rise:0;position:absolute;right:clamp(-4rem,8vw,9rem);top:100%;
+  width:min(62vmin,540px);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,#FFD98C 0 34%,#F2B254 52%,rgba(233,162,59,.42) 62%,rgba(233,162,59,0) 71%);
+  transform:translateY(calc(var(--rise) * -100%));
+}
+@media (prefers-reduced-motion:reduce){.sun{display:none}}
+
+.scene{min-height:88vh;min-height:88svh;display:grid;align-items:center;padding:clamp(4rem,12vh,7rem) 0;color:var(--light)}
+.scene__inner{position:relative;z-index:2}
+.scene__inner > *{max-width:34rem}
+.scene h3{font-family:var(--serif);font-weight:400;font-size:1.25rem;color:#FFE3B0;margin:0 0 .9rem}
+.scene p{font-family:var(--serif);font-size:clamp(1.2rem,1.05rem + .55vw,1.5rem);line-height:1.6}
+.scene .scene__big{
+  font-size:clamp(1.9rem,1.3rem + 2.7vw,3.3rem);line-height:1.22;letter-spacing:-.005em;
+  max-width:46rem;margin:1.1em 0;text-wrap:balance;
+}
+.scene__inner > .scene__big:first-child{margin-top:0}
+.scene__inner > :last-child{margin-bottom:0}
+
+/* a scene you are not reading sits back in the dark */
+.js .scene__inner{opacity:.3}
+.js .scene__inner.is-lit{opacity:1}
+@media (prefers-reduced-motion:no-preference){.js .scene__inner{transition:opacity .6s ease}}
+@media (prefers-reduced-motion:reduce){.js .scene__inner{opacity:1}}
+
+/* each scene hands its colour to the next, so the ink is fixed per scene */
+.scene--echo {background:linear-gradient(180deg,#0A2449,#071C38)}
+.scene--1    {background:linear-gradient(180deg,#071C38,#08203F)}
+.scene--2    {background:linear-gradient(180deg,#08203F,#0A2449)}
+.scene--3    {background:linear-gradient(180deg,#0A2449,#0C2B52)}
+.scene--4    {background:linear-gradient(180deg,#0C2B52,#0F3263)}
+.scene--5    {background:linear-gradient(180deg,#0F3263,#15437C)}
+.scene--6    {background:linear-gradient(180deg,#15437C,#1F5590)}
+.scene--7    {background:linear-gradient(180deg,#1F5590,#2F6AA6)}
+.dawnbreak   {height:70vh;height:70svh;background:linear-gradient(180deg,#2F6AA6,#7FB4DE 55%,var(--zenith))}
+.scene--8,.scene--close{background:var(--zenith);color:var(--ink)}
+.scene--8 h3{color:var(--ink-mid)}
+.scene--close{padding-bottom:clamp(5rem,16vh,9rem)}
+
+.echo__words{font-style:italic;color:var(--light-soft);margin:0 0 1.2rem;overflow-wrap:anywhere}
+.echo__words:focus{outline:none}
+.scene .echo__line{
+  font-family:var(--serif);font-weight:400;margin:0;
+  font-size:clamp(2.2rem,1.4rem + 3.6vw,4.2rem);line-height:1.16;max-width:48rem;text-wrap:balance;
+}
+.echo__line:focus{outline:none}
+.scene .echo__help{
+  font-family:var(--sans);font-size:1.0625rem;margin:1.6rem 0 0;padding:1rem 1.2rem;border-radius:4px;
+  background:rgba(233,162,59,.14);border:1px solid rgba(233,162,59,.45);
+}
+.scene .echo__help a{color:var(--light);font-weight:600}
+.scene .echo__cue{font-family:var(--sans);font-size:1rem;color:var(--light-soft);margin-top:2.4rem}
+.echo__cue a{color:var(--light)}
+.scene .close__yours{font-family:var(--sans);font-size:1.0625rem;color:var(--ink-mid);overflow-wrap:anywhere}
+
 .hero__role{
   font-family:var(--serif);font-style:italic;
   font-size:clamp(1rem,.9rem + .4vw,1.2rem);
@@ -378,7 +485,7 @@ a{color:inherit}
 .sample__video iframe{width:100%;height:100%;border:0;border-radius:4px}
 @media (max-width:820px){.sample{grid-template-columns:1fr}}
 
-/* ── readiness check CTA ─────────────────────────────────── */
+/* ── manifestation calculator CTA ─────────────────────────────────── */
 .tool{display:grid;grid-template-columns:1fr auto;gap:clamp(2rem,5vw,4.5rem);align-items:start}
 .tool__text{max-width:52ch}
 .tool__text p{color:#C3D7EA}
@@ -504,3 +611,8 @@ a{color:inherit}
 .foot__note a{color:#B5CCE2}
 .foot__note{font-size:.875rem;line-height:1.7;max-width:70ch;margin:0;color:#8AA6C2}
 .foot__copy{font-size:.875rem;margin:0;color:#8AA6C2}
+
+.echo__cue a{display:inline-block;padding:.65rem .2rem}
+
+/* amber on an amber sun disappears, so the last button goes dark */
+.scene--close .btn--sun{background:var(--ink);border-color:var(--ink);color:var(--light)}
