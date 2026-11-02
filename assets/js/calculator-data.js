@@ -1,8 +1,13 @@
 /* ============================================================
-   Manifestation Readiness — model and content
+   Readiness Check — model and content
    ------------------------------------------------------------
    DIMENSIONS carry the weights. Each has two questions scored
    0–10, so a dimension score is their mean.
+
+   The score is a reflection measure. The weights express this
+   coaching framework's emphasis; they have not been statistically
+   validated, so nothing here may be worded as a probability of
+   reaching a goal.
 
    COMPOSITES group the nine dimensions into the five reported
    areas. Edit the `of` arrays to regroup — nothing else needs
@@ -177,9 +182,9 @@ window.FMR = (function () {
   ];
 
   var BANDS = [
-    { min: 80, name: 'Aligned',
+    { min: 80, name: 'Well aligned',
       note: 'Most of the structure is in place. The work now is protecting it — the usual failure from here is drift, not collapse.' },
-    { min: 60, name: 'Close',
+    { min: 60, name: 'Mostly aligned',
       note: 'The foundation holds and one or two areas are doing the holding back. Those are worth more of your attention than anything already working.' },
     { min: 40, name: 'Uneven',
       note: 'Real strength in places, real gaps in others. Uneven profiles usually move fastest by repairing the weakest area rather than pushing harder on the strongest.' },
@@ -187,9 +192,37 @@ window.FMR = (function () {
       note: 'Most of the structure is not in place yet. That is information about the structure, not about you — and it is the most changeable thing here.' }
   ];
 
+  /* Named gaps between two dimensions. The first pattern that fits is shown,
+     so keep the most telling ones at the top. */
+  var PATTERNS = [
+    { high: 'conception', low: 'action',
+      text: 'You can see this outcome clearly, but what you can see is ahead of what you are doing. More planning will not close that gap; small visible actions will.' },
+    { high: 'belief', low: 'action',
+      text: 'You believe in this more than your last week shows. The belief is useful, and it needs something to stand on.' },
+    { high: 'action', low: 'focus',
+      text: 'You are putting in effort, and it is spreading across too much. The same effort on one thing would count for more.' },
+    { high: 'intention', low: 'consistency',
+      text: 'You know what you want, but your effort comes in bursts. A smaller promise you can keep daily suits you better than a bigger one you cannot.' },
+    { high: 'action', low: 'feeling',
+      text: 'You are getting things done, and the pressure is doing a lot of the pushing. That is worth easing before it wears you down.' },
+    { high: 'action', low: 'adoptability',
+      text: 'You keep moving, but you are less willing to change how. Check that the method deserves the effort you are giving it.' },
+    { high: 'focus', low: 'exposure',
+      text: 'Your attention is on this, but mostly from a distance. It is time to get closer to the real thing.' }
+  ];
+
   function dimByKey(k) {
     for (var i = 0; i < DIMENSIONS.length; i++) if (DIMENSIONS[i].key === k) return DIMENSIONS[i];
     return null;
+  }
+
+  function isComplete(answers) {
+    return DIMENSIONS.every(function (d) {
+      return [0, 1].every(function (i) {
+        var v = answers[d.key + '-' + i];
+        return typeof v === 'number' && v >= 0 && v <= 10;
+      });
+    });
   }
 
   /* answers: { 'action-0': 7, 'action-1': 4, ... } values 0–10 */
@@ -209,7 +242,13 @@ window.FMR = (function () {
     var byKey = {};
     dims.forEach(function (d) { byKey[d.key] = d; });
 
-    var total = dims.reduce(function (s, d) { return s + d.earned; }, 0);
+    // every mean is a multiple of 0.5, so the sum is kept in whole twentieths:
+    // no floating-point drift, and the same answers can't round two ways
+    var twentieths = dims.reduce(function (s, d) {
+      return s + Math.round(d.score * 2) * d.weight;
+    }, 0);
+    var total = twentieths / 20;
+    var rounded = Math.round(total);
 
     var composites = COMPOSITES.map(function (c) {
       var members = c.of.map(function (k) { return byKey[k]; });
@@ -219,37 +258,178 @@ window.FMR = (function () {
     });
 
     // biggest drag first: weighted points lost, so a weak heavy dimension
-    // outranks a weak light one
+    // outranks a weak light one. Ties fall back to the model's own order.
+    var order = function (d) { return dims.indexOf(d); };
     var byDrag = dims.slice().sort(function (x, y) {
-      return (y.lost - x.lost) || (y.weight - x.weight);
+      return (y.lost - x.lost) || (y.weight - x.weight) || (order(x) - order(y));
     });
     var byStrength = dims.slice().sort(function (x, y) {
-      return (y.score - x.score) || (y.weight - x.weight);
+      return (y.score - x.score) || (y.weight - x.weight) || (order(x) - order(y));
     });
 
+    // the band follows the number the reader sees, not the unrounded one
     var band = BANDS[BANDS.length - 1];
     for (var i = 0; i < BANDS.length; i++) {
-      if (total >= BANDS[i].min) { band = BANDS[i]; break; }
+      if (rounded >= BANDS[i].min) { band = BANDS[i]; break; }
     }
 
+    var hi = byStrength[0].score, lo = byStrength[byStrength.length - 1].score;
+
     return {
-      total: Math.round(total),
-      resistance: Math.round(100 - total),
+      total: rounded,
+      exact: total,
+      resistance: 100 - rounded,
       band: band,
       dims: dims,
       composites: composites,
-      blocker: byDrag[0],
-      weakest: byDrag.slice(0, 2),
-      strongest: byStrength[0]
+      blocker: byDrag[0].lost > 0 ? byDrag[0] : null,
+      weakest: byDrag.slice(0, 2).filter(function (d) { return d.lost > 0; }),
+      strongest: byStrength[0].score > 0 ? byStrength[0] : null,
+      flat: hi === lo                                // every dimension the same
     };
+  }
+
+  /* The single answer furthest below the rest, for quoting back. */
+  function lowestAnswer(answers) {
+    var best = null;
+    DIMENSIONS.forEach(function (d) {
+      d.questions.forEach(function (q, i) {
+        var v = answers[d.key + '-' + i];
+        if (!best || v < best.value) best = { value: v, text: q.text, anchor: q.low, dim: d.name };
+      });
+    });
+    return best;
+  }
+
+  /* Plain sentences built only from this person's answers. Pure: the same
+     answers and goal always give the same words. */
+  function reading(answers, goal) {
+    var r = score(answers), out = [];
+    var byKey = {};
+    r.dims.forEach(function (d) { byKey[d.key] = d; });
+
+    if (!r.blocker) {
+      out.push('You marked every answer at the top of the scale for “' + goal +
+        '”. If that is honest, keep doing what you are doing. If it felt too easy, ' +
+        'ask someone who knows you well to answer the same questions about you.');
+      return out;
+    }
+    if (!r.strongest) {
+      out.push('You marked every answer at the bottom of the scale for “' + goal +
+        '”. That is a hard place to answer from, and it is also a clear place to start. ' +
+        'Pick one small thing, not nine.');
+      return out;
+    }
+
+    var same = r.strongest.key === r.blocker.key;
+    if (r.flat) {
+      out.push('You rated all nine areas about the same for “' + goal + '”, at ' +
+        r.strongest.score.toFixed(1) + ' out of 10. Nothing stands out as a strength or a gap, ' +
+        'so ' + r.blocker.name + ' comes first simply because it carries the most weight in this check.');
+    } else if (same) {
+      out.push('For “' + goal + '”, ' + r.blocker.name + ' is your highest score (' +
+        r.blocker.score.toFixed(1) + ' out of 10), and it still has the most room, because it ' +
+        'carries so much weight in this check. It accounts for ' + r.blocker.lost.toFixed(1) +
+        ' of the points not yet earned.');
+    } else {
+      out.push('For “' + goal + '”, your strongest area is ' + r.strongest.name + ' (' +
+        r.strongest.score.toFixed(1) + ' out of 10). The area with the most room is ' +
+        r.blocker.name + ' (' + r.blocker.score.toFixed(1) + ' out of 10), which accounts for ' +
+        r.blocker.lost.toFixed(1) + ' of the points not yet earned.');
+    }
+
+    for (var i = 0; i < PATTERNS.length; i++) {
+      var p = PATTERNS[i];
+      if (byKey[p.high].score >= 6.5 && byKey[p.low].score <= byKey[p.high].score - 2.5) {
+        out.push(p.text);
+        break;
+      }
+    }
+
+    var low = lowestAnswer(answers);
+    if (low.value <= 4) {
+      out.push('Your lowest single answer was ' + low.value + ' out of 10, on this question: “' +
+        low.text + '” Start there. It is the most specific thing this check can point you to.');
+    }
+    return out;
+  }
+
+  /* Ordered next steps, drawn from the two areas costing the most points. */
+  function nextActions(r) {
+    if (!r.blocker) {
+      return [{ when: 'This week', text: 'Choose the one habit that matters most here and protect it.' },
+              { when: 'This month', text: 'Take this check again and see whether your answers still hold.' }];
+    }
+    var first = dimByKey(r.blocker.key);
+    var acts = [
+      { when: 'Today', text: first.do[0] },
+      { when: 'This week', text: first.experiment }
+    ];
+    if (r.weakest[1]) {
+      acts.push({ when: 'Next week', text: 'Then turn to ' + r.weakest[1].name + ': ' +
+        dimByKey(r.weakest[1].key).do[0] });
+    }
+    return acts;
+  }
+
+  /* Change in self-reported scores between two checks, largest first. */
+  function compare(prevDims, nowDims) {
+    return DIMENSIONS.map(function (d) {
+      return { key: d.key, name: d.name, change: nowDims[d.key] - prevDims[d.key] };
+    }).sort(function (a, b) {
+      return (Math.abs(b.change) - Math.abs(a.change));
+    });
+  }
+
+  /* The copy/download version of the report. */
+  function reportText(answers, goal, dateText, tracker) {
+    var r = score(answers), L = [];
+    L.push('READINESS CHECK: YOUR REPORT');
+    L.push('Davinder Pal Singh, Life Architect Coach');
+    if (dateText) L.push(dateText);
+    L.push('');
+    L.push('Outcome: ' + goal);
+    L.push('Reflection score: ' + r.total + ' / 100 (' + r.band.name + ')');
+    L.push(r.band.note);
+    L.push('');
+    L.push('YOUR READING');
+    reading(answers, goal).forEach(function (t) { L.push(t); });
+    L.push('');
+    L.push('NEXT ACTIONS');
+    nextActions(r).forEach(function (a) { L.push('- ' + a.when + ': ' + a.text); });
+    L.push('');
+    L.push('BREAKDOWN (your score out of 10, then points earned out of the weight)');
+    r.dims.forEach(function (d) {
+      L.push('- ' + d.name + ': ' + d.score.toFixed(1) + '/10, ' +
+             d.earned.toFixed(1) + ' of ' + d.weight + ' points');
+    });
+    if (tracker) {
+      var n = tracker.days.filter(Boolean).length;
+      L.push('');
+      L.push('SEVEN-DAY TRACKER: ' + n + ' of 7 days done');
+      if (tracker.note) L.push('Notes: ' + tracker.note);
+    }
+    L.push('');
+    L.push('How the score works: each dimension is the average of your two answers. ' +
+           'That average, out of 10, is multiplied by the dimension’s weight, and the ' +
+           'nine results are added up.');
+    L.push('This is a reflection of what you reported, not a prediction or the probability ' +
+           'of reaching your goal. It is not medical or psychological advice.');
+    return L.join('\n');
   }
 
   return {
     DIMENSIONS: DIMENSIONS,
     COMPOSITES: COMPOSITES,
     BANDS: BANDS,
+    PATTERNS: PATTERNS,
     dimByKey: dimByKey,
+    isComplete: isComplete,
     score: score,
+    reading: reading,
+    nextActions: nextActions,
+    compare: compare,
+    reportText: reportText,
     totalWeight: DIMENSIONS.reduce(function (s, d) { return s + d.weight; }, 0)
   };
 })();

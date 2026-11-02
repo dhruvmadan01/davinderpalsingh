@@ -12,6 +12,12 @@
      ---------------------------------------------------------- */
   var WHATSAPP_NUMBER = '917009925750';   // +91 70099 25750
 
+  /* ----------------------------------------------------------
+     Sample lesson: the YouTube video ID of a real free lesson,
+     e.g. 'dQw4w9WgXcQ'. While empty, the section stays hidden.
+     ---------------------------------------------------------- */
+  var SAMPLE_LESSON_ID = '';
+
   var configured = /^\d{10,15}$/.test(WHATSAPP_NUMBER);
   var DEFAULT_NOTE = 'Your message opens in WhatsApp — send it from there.';
 
@@ -20,6 +26,9 @@
            (text ? '?text=' + encodeURIComponent(text) : '');
   }
 
+  // the readiness check builds its own pre-filled message
+  if (configured) window.dpsWaLink = waLink;
+
   if (configured) {
     var greeting = "Hello, I’d like to know more about your coaching.";
     Array.prototype.forEach.call(document.querySelectorAll('[data-wa]'), function (a) {
@@ -27,6 +36,28 @@
       a.target = '_blank';
       a.rel = 'noopener';
     });
+  }
+
+  /* ── sample lesson: loads only when someone presses play ── */
+  var sample = document.getElementById('sample');
+  var sampleBox = document.getElementById('sampleVideo');
+  if (sample && sampleBox && /^[\w-]{6,20}$/.test(SAMPLE_LESSON_ID)) {
+    sample.hidden = false;
+    var play = document.createElement('button');
+    play.type = 'button';
+    play.className = 'btn btn--sun';
+    play.textContent = 'Play the lesson';
+    play.addEventListener('click', function () {
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + SAMPLE_LESSON_ID + '?autoplay=1';
+      f.title = 'Sample lesson';
+      f.allow = 'autoplay; encrypted-media; picture-in-picture';
+      f.allowFullscreen = true;
+      sampleBox.innerHTML = '';
+      sampleBox.classList.add('is-playing');
+      sampleBox.appendChild(f);
+    });
+    sampleBox.appendChild(play);
   }
 
   /* ── enquiry form → WhatsApp ────────────────────────────── */
@@ -115,6 +146,11 @@
       window.requestAnimationFrame(update);
     }
   }
+
+  // opening a level's details changes the height of the climb
+  Array.prototype.forEach.call(document.querySelectorAll('.step__more'), function (d) {
+    d.addEventListener('toggle', onScroll);
+  });
 
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll, { passive: true });
