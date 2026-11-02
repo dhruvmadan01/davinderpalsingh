@@ -8,7 +8,7 @@ rest of the site and need his yes or no before this goes live.
 
 | What | Why it matters | Where it goes |
 |---|---|---|
-| **His story:** how he came to this work, years of practice, people taught, training and credentials | A 2–3 year journey needs a reason to trust him. The About section has none of this yet | `index.html`, `#about` |
+| **Numbers and training:** people taught so far, batches run, any formal training | Adds credibility beside his story | `index.html`, `#about` |
 | **A sample lesson:** one real free lesson, ideally from Deep Sleep | Lets people experience him before deciding. Hidden until supplied | `SAMPLE_LESSON_ID` in `assets/js/site.js` |
 | **Real participant feedback:** first name, city, level done, in their own words, with written permission | Hidden until supplied. No invented quotes, and no cure or income claims | `#feedback` in `index.html` |
 | **Fees** for each level, and any refund policy | The FAQ currently says to ask on WhatsApp | `#faq` |
@@ -41,8 +41,31 @@ Also confirm:
 
 - **Foundation total:** the site says 98 days (11 + 21 + 66). This assumes the three run back to back.
 - **Evidence:** each level says outcome data has not been published yet. If he has real data, it can replace this line.
-- **Language:** Hindi now, English later.
 - **Level 5 and 6 "adults only"** wording, and how Level 7 works for people who skip Level 6.
+
+## 2a. His story: please read every line
+
+The new "My story" section is translated from his recording into first-person English. These points need his decision:
+
+- **Medicines left out on purpose.** He said participants stopped 7–8 tablets they had taken for eight years. It is not on the site, and shouldn't be. It could lead a reader to stop their own medicine, it contradicts the site's "don't stop your medicines" boundary, and it is the kind of claim India's rules on health advertising restrict.
+- **The three suicidal periods left out.** That is his to share or not, and a sales page is a difficult place for it. If he wants it included, it should be worded with care and sit near the helpline information.
+- **Property dealers and doctors left out.** He said they manipulated him. Blaming whole groups on a public page adds risk without helping the story.
+- **"My financial situation dramatically improved" softened** to "My work began to move", so it doesn't read as an income promise.
+- **"For the last eleven months, I have not felt unhappy for a single day"** is kept as his personal experience. Please confirm he's happy to say this publicly.
+- **The closing line** ("you have fallen, now get up. I would like to say that to you") is my wording, built from what he said. Please approve it.
+- **"Blessings":** the transcript says "दवाएं" (medicines), which I read as "दुआएं" (blessings). Please confirm.
+- **"7 betrayals by partners"** appears as a headline number. Please confirm he's comfortable with that.
+
+## 2b. Where his recording disagrees with the site
+
+| Topic | Site says | He said | Needs |
+|---|---|---|---|
+| Numbering | Levels 1 to 10 | L0 to L9 | Which should we use? |
+| Order | Intimacy Mastery, then Conscious Conceiving | Conscious Conceiving first | Correct order? This affects the "why here" text |
+| Flow State and Ecosystem | Levels 4 and 10 | Not mentioned | Still in the programme? |
+| The Life Book | Not on the site | Runs in parallel | What is it? |
+| Level 8 | The Seven Aspects of Life | "Seven Spirits of Life" in the transcript | Which name is right? |
+| Language | Changed to Punjabi-speaking so far | Punjabi-speaking people | Language for city batches? |
 
 ## 3. Wording I changed, for him to approve
 

@@ -10,7 +10,7 @@ Static HTML/CSS/JS — no build step, no framework, no dependencies.
 | # | What | Where |
 |---|------|-------|
 | 1 | **Everything in `CONTENT-NEEDED.md`** — founder story, level details, fees, sample lesson, feedback | see that file |
-| 2 | **Delivery language** — the Language row currently says sessions run in Hindi with English cohorts opening later. Confirm or correct it. | `index.html` → `#format` |
+| 2 | **Delivery language** for city batches | `index.html` → `#format` |
 | 3 | **Site address** for the share/OG link | `index.html` → `og:url` |
 
 The WhatsApp number is set (`917009925750`). To change it, edit
